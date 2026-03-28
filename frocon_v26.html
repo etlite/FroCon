@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+PHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iNCIgZmlsbD0iIzBhMGEwYSIvPjxnIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2U4ZTBjYyIgc3Ryb2tlLXdpZHRoPSIxLjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+PGVsbGlwc2UgY3g9IjE2IiBjeT0iMjIiIHJ4PSI3IiByeT0iNSIvPjxwYXRoIGQ9Ik05IDE4IFE4IDEzIDEwIDEwIFExMyA2IDE2IDYgUTE5IDYgMjIgMTAgUTI0IDEzIDIzIDE4Ii8+PHBhdGggZD0iTTEwIDEwIFExMiA4IDE0IDkgUTE2IDcgMTggOSBRMjAgOCAyMiAxMCIvPjxwYXRoIGQ9Ik05IDE4IFE3IDE5IDcgMjEgUTcgMjMgOSAyMyIvPjxwYXRoIGQ9Ik0yMyAxOCBRMjUgMTkgMjUgMjEgUTI1IDIzIDIzIDIzIi8+PHBhdGggZD0iTTExIDE0IFExMiAxMiAxMyAxMyBRMTMgMTIgMTQgMTMiIHN0cm9rZS13aWR0aD0iMSIvPjxwYXRoIGQ9Ik0xOCAxMyBRMTkgMTIgMjAgMTMgUTIwIDEyIDIxIDEzIiBzdHJva2Utd2lkdGg9IjEiLz48cmVjdCB4PSIxMCIgeT0iMjAiIHdpZHRoPSI1IiBoZWlnaHQ9IjMiIHJ4PSIxIi8+PHJlY3QgeD0iMTciIHk9IjIwIiB3aWR0aD0iNSIgaGVpZ2h0PSIzIiByeD0iMSIvPjxsaW5lIHgxPSIxNSIgeTE9IjIxLjUiIHgyPSIxNyIgeTI9IjIxLjUiLz48L2c+PC9zdmc+">
+<title>FroCon Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Oswald:wght@700&family=Special+Elite&family=VT323&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0a;
+    --panel: #111;
+    --border: #2a2a2a;
+    --cream: #e8e0cc;
+    --muted: #555;
+    --level-color: #ffb347;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html, body {
+    min-height: 100%;
+    background: var(--bg);
+    color: var(--cream);
+    font-family: 'Share Tech Mono', monospace;
+  }
+
+  body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 12px 80px;
+    position: relative;
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: repeating-linear-gradient(to bottom, transparent 0px, transparent 3px, rgba(0,0,0,0.07) 3px, rgba(0,0,0,0.07) 4px);
+    pointer-events: none;
+    z-index: 100;
+  }
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: radial-gradient(ellipse at center, transparent 50%, rgba(0,0,0,0.7) 100%);
+    pointer-events: none;
+    z-index: 99;
+  }
+
+  /* ── PAGE LAYOUT: legend left + main center ── */
+  .page-layout {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    width: 100%;
+    max-width: 780px;
+    position: relative;
+    z-index: 1;
+    padding-top: 0;
+  }
+
+  .color-bar {
+    width: 100%;
+    height: 2px;
+    background: var(--level-color);
+    box-shadow: 0 0 14px var(--level-color);
+    transition: background 0.6s, box-shadow 0.6s;
+    margin-bottom: 20px;
+  }
+
+  .header {
+    text-align: center;
+    margin-bottom: 28px;
+    padding: 0 16px;
+  }
+
+  .content-row {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 24px;
+    width: 100%;
+    padding: 0 12px;
+  }
+
+  .footer-row {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+    padding: 0 16px;
+  }
+
+  /* ── LEGEND ── */
+  .legend {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    width: 140px;
+    flex-shrink: 0;
+    border: 1px solid var(--border);
+    background: var(--panel);
+    position: relative;
+  }
+  .legend::before {
+    content: 'SCALE';
+    display: block;
+    font-size: 0.5rem;
+    letter-spacing: 0.4em;
+    color: var(--muted);
+    text-align: center;
+    padding: 8px 0 6px;
+    border-bottom: 1px solid var(--border);
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 12px;
+    border-bottom: 1px solid var(--border);
+    cursor: default;
+    transition: background 0.2s;
+    position: relative;
+  }
+  .legend-item:last-child { border-bottom: none; }
+  .legend-item.active-level {
+    background: rgba(255,255,255,0.04);
+  }
+  .legend-item.active-level::before {
+    content: '▶';
+    position: absolute;
+    left: 4px;
+    font-size: 0.45rem;
+    color: var(--item-color);
+  }
+  .legend-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    background: var(--item-color);
+    box-shadow: 0 0 6px var(--item-color);
+    transition: box-shadow 0.4s;
+  }
+  .legend-item:not(.active-level) .legend-dot {
+    box-shadow: none;
+    opacity: 0.4;
+  }
+  .legend-text {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+  }
+  .legend-level {
+    font-family: 'Oswald', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    color: var(--item-color);
+    transition: opacity 0.4s;
+    line-height: 1;
+  }
+  .legend-item:not(.active-level) .legend-level { opacity: 0.35; }
+  .legend-desc {
+    font-size: 0.48rem;
+    letter-spacing: 0.04em;
+    color: var(--muted);
+    line-height: 1.3;
+    transition: opacity 0.4s;
+  }
+  .legend-item.active-level .legend-desc { color: var(--cream); opacity: 0.6; }
+
+  /* ── MAIN PANEL ── */
+
+  .header-label { font-size: 0.65rem; letter-spacing: 0.4em; color: var(--muted); text-transform: uppercase; margin-bottom: 4px; }
+  .header-title {
+    font-family: 'Oswald', sans-serif;
+    font-size: clamp(2rem, 8vw, 3.8rem);
+    font-weight: 700; letter-spacing: 0.15em;
+    color: var(--cream); text-shadow: 0 0 30px rgba(255,179,71,0.3); line-height: 1;
+  }
+  .header-title span { color: var(--level-color); transition: color 0.6s; }
+
+  .main-panel {
+    display: flex; flex-direction: column; align-items: center;
+    width: 100%; max-width: 460px; flex-shrink: 0;
+  }
+
+  .level-display {
+    border: 1px solid var(--border); background: var(--panel);
+    padding: 14px 20px 12px; text-align: center; width: 100%; position: relative;
+  }
+
+  .frocon-label { font-size: 0.6rem; letter-spacing: 0.5em; color: var(--muted); text-transform: uppercase; margin-bottom: 2px; }
+  .frocon-title {
+    font-family: 'Oswald', sans-serif; font-size: clamp(1.4rem, 6vw, 2.4rem);
+    font-weight: 700; letter-spacing: 0.2em; color: var(--level-color);
+    text-shadow: 0 0 20px var(--level-color); transition: color 0.6s, text-shadow 0.6s; line-height: 1.1;
+  }
+
+  .fro-box {
+    border: 1px solid var(--border); border-top: none; background: #000;
+    width: 100%; display: flex; align-items: center; justify-content: center; overflow: hidden;
+  }
+  .fro-box img {
+    width: 100%; height: auto; display: block; transition: opacity 0.3s;
+    max-height: 70vw; object-fit: contain;
+  }
+
+  .status-bar {
+    border: 1px solid var(--border); border-top: none; background: var(--panel);
+    width: 100%; padding: 10px 16px;
+    display: grid; grid-template-columns: 1fr auto; gap: 8px; align-items: start;
+  }
+  .status-message {
+    font-family: 'Share Tech Mono', monospace; font-size: clamp(0.78rem, 2.8vw, 0.92rem);
+    color: var(--cream); opacity: 1; line-height: 1.6; font-style: normal; letter-spacing: 0.08em;
+    text-shadow: 0 0 8px var(--level-color), 0 0 20px var(--level-color), 0 0 2px rgba(255,255,255,0.4);
+  }
+  .status-message::before { content: ''; }
+  .status-message::after  { content: ''; }
+  .timestamp { font-family: 'VT323', monospace; font-size: 0.95rem; color: var(--muted); text-align: right; white-space: nowrap; padding-top: 2px; letter-spacing: 0.06em; }
+  .timestamp span { display: block; }
+
+  .change-btn {
+    position: fixed;
+    bottom: 16px;
+    right: 18px;
+    background: none;
+    border: none;
+    color: #2a2a2a;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.55rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    cursor: pointer;
+    z-index: 200;
+    padding: 4px;
+    min-height: 44px;
+    min-width: 44px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-end;
+    touch-action: manipulation;
+    transition: color 0.3s;
+  }
+  .change-btn:hover, .change-btn:active { color: var(--muted); background: none; box-shadow: none; }
+
+  .level-indicators {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    border: 1px solid var(--border);
+    border-top: none;
+    padding: 12px 0;
+    background: var(--panel);
+    margin-bottom: 18px;
+  }
+  .level-pip { width: 32px; height: 6px; border: 1px solid var(--border); background: transparent; transition: background 0.5s, box-shadow 0.5s, border-color 0.5s; }
+  .level-pip.active { background: var(--level-color); box-shadow: 0 0 8px var(--level-color); border-color: var(--level-color); }
+
+  /* ── LIVE DOT ── */
+  .live-dot { position: fixed; top: 12px; right: 14px; display: flex; align-items: center; gap: 6px; font-size: 0.5rem; letter-spacing: 0.2em; color: #333; z-index: 200; text-transform: uppercase; transition: color 0.4s; }
+  .live-dot.connected { color: #39ff14; }
+  .live-dot.connected .dot { background: #39ff14; box-shadow: 0 0 6px #39ff14; }
+  .live-dot.error { color: #ff3c3c; }
+  .live-dot.error .dot { background: #ff3c3c; }
+  .dot { width: 6px; height: 6px; border-radius: 50%; background: #333; transition: background 0.4s, box-shadow 0.4s; }
+  @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+  .live-dot.connected .dot { animation: pulse 2s ease infinite; }
+
+  .classification { font-size: 0.5rem; letter-spacing: 0.4em; color: #333; text-transform: uppercase; white-space: nowrap; text-align: center; margin-bottom: 10px; position: relative; z-index: 1; }
+
+  /* ── MODAL ── */
+  .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.88); z-index: 300; display: flex; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: opacity 0.25s; padding: 16px; }
+  .modal-overlay.open { opacity: 1; pointer-events: all; }
+  .modal { background: #0f0f0f; border: 1px solid #333; padding: 28px 24px; width: 100%; max-width: 340px; position: relative; font-family: 'Share Tech Mono', monospace; max-height: 90vh; overflow-y: auto; }
+  .modal::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: var(--level-color); transition: background 0.6s; }
+  .modal h2 { font-family: 'Oswald', sans-serif; font-size: 1.1rem; letter-spacing: 0.2em; color: var(--level-color); margin-bottom: 20px; text-transform: uppercase; transition: color 0.6s; }
+  .modal-close { position: absolute; top: 12px; right: 14px; background: none; border: none; color: var(--muted); cursor: pointer; font-size: 1rem; font-family: 'Share Tech Mono', monospace; min-width: 44px; min-height: 44px; display: flex; align-items: center; justify-content: center; }
+  .modal-close:hover { color: var(--cream); }
+  .form-group { margin-bottom: 16px; }
+  .form-label { display: block; font-size: 0.6rem; letter-spacing: 0.3em; color: var(--muted); text-transform: uppercase; margin-bottom: 6px; }
+  .form-input { width: 100%; background: #1a1a1a; border: 1px solid #333; color: var(--cream); font-family: 'Share Tech Mono', monospace; font-size: 1rem; padding: 10px 12px; outline: none; transition: border-color 0.2s; -webkit-appearance: none; border-radius: 0; }
+  .form-input:focus { border-color: var(--level-color); }
+  .form-textarea { width: 100%; background: #1a1a1a; border: 1px solid #333; color: var(--cream); font-family: 'Special Elite', cursive; font-size: 1rem; padding: 10px 12px; outline: none; resize: vertical; min-height: 60px; transition: border-color 0.2s; -webkit-appearance: none; border-radius: 0; }
+  .form-textarea:focus { border-color: var(--level-color); }
+  .level-btns { display: flex; gap: 6px; }
+  .level-btn { flex: 1; padding: 12px 4px; background: #1a1a1a; border: 1px solid #333; color: var(--muted); font-family: 'Oswald', sans-serif; font-size: 1.1rem; font-weight: 700; cursor: pointer; transition: all 0.2s; text-align: center; min-height: 44px; touch-action: manipulation; }
+  .level-btn:hover { border-color: var(--cream); color: var(--cream); }
+  .btn-apply { width: 100%; padding: 12px; background: var(--level-color); border: none; color: #000; font-family: 'Oswald', sans-serif; font-size: 0.9rem; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; cursor: pointer; transition: opacity 0.2s, box-shadow 0.2s; margin-top: 8px; min-height: 44px; touch-action: manipulation; }
+  .btn-apply:hover, .btn-apply:active { opacity: 0.85; box-shadow: 0 0 20px var(--level-color); }
+  .error-msg { color: #ff3c3c; font-size: 0.65rem; margin-top: 6px; min-height: 14px; letter-spacing: 0.1em; }
+  .auth-gate {}
+  .admin-panel { display: none; }
+  .admin-panel.visible { display: block; }
+  .auth-gate.hidden { display: none; }
+
+  @keyframes flash { 0% { opacity: 1; } 25% { opacity: 0.05; } 70% { opacity: 0.9; } 100% { opacity: 1; } }
+  .flash { animation: flash 0.45s ease; }
+
+  /* ── RESPONSIVE ── */
+
+  /* Tablet: tighten up side padding */
+  @media (max-width: 820px) {
+    .content-row { gap: 14px; padding: 0 10px; }
+    .legend { width: 120px; }
+    .legend-desc { display: none; }
+  }
+
+  /* Phone: stack legend below main panel, run it horizontal */
+  @media (max-width: 600px) {
+    body { padding: 40px 10px 60px; }
+
+    .content-row {
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      padding: 0;
+    }
+
+    /* Legend goes below the main panel */
+    .legend {
+      order: 2;
+      width: 100%;
+      flex-direction: row;
+      border: 1px solid var(--border);
+    }
+    .legend::before { display: none; }
+    .legend-item {
+      flex: 1;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 8px 4px;
+      border-bottom: none;
+      border-right: 1px solid var(--border);
+      gap: 4px;
+    }
+    .legend-item:last-child { border-right: none; }
+    .legend-item.active-level::before { display: none; }
+    .legend-dot { width: 10px; height: 10px; }
+    .legend-level { font-size: 0.65rem; }
+    .legend-desc { display: none; }
+    .legend-text { align-items: center; }
+
+    /* Main panel fills width */
+    .main-panel { order: 1; max-width: 100%; }
+    .fro-box img { max-height: 88vw; }
+
+    .footer-row { padding: 0; }
+    .level-pip { width: 24px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="live-dot" id="liveDot"><div class="dot"></div><span id="liveLabel">connecting</span></div>
+
+<div class="page-layout">
+
+  <div class="classification">// INTERNAL USE ONLY //</div>
+
+  <!-- ── HEADER ── -->
+  <div class="header">
+    <div class="header-title"><span style="color:var(--level-color)">FroCon<span style="color:var(--cream)">dition</span></div>
+  </div>
+
+  <div class="color-bar" id="colorBar"></div>
+
+  <!-- ── CONTENT ROW ── -->
+  <div class="content-row">
+  <div class="legend" id="legend">
+    <!-- populated by JS -->
+  </div>
+
+  <!-- ── MAIN ── -->
+  <div class="main-panel">
+    <div class="level-display">
+      <div class="frocon-label">Current Condition</div>
+      <div class="frocon-title" id="froconTitle">FROCON 3</div>
+    </div>
+    <div class="fro-box" id="froBox">
+      <img id="froImg" src="" alt="FroCon level illustration" />
+    </div>
+    <div class="status-bar">
+      <div class="status-message" id="statusMsg">Loading…</div>
+      <div class="timestamp">
+        <span style="color:#444;font-size:0.5rem;letter-spacing:0.2em">UPDATED</span>
+        <span id="tsDate">--/--/----</span>
+        <span id="tsTime">--:--:--</span>
+      </div>
+    </div>
+    <div class="level-indicators" id="pips"></div>
+  </div>
+
+  </div><!-- end content-row -->
+
+  <!-- ── HISTORY CHART ── -->
+  <div id="history-section" style="width:100%;margin:18px 0 0;padding:0 12px;">
+    <div style="color:var(--muted);letter-spacing:0.15em;font-size:0.6rem;margin-bottom:8px;border-bottom:1px solid var(--border);padding-bottom:6px;">▸ FROCON LEVEL HISTORY</div>
+    <div id="historyEmpty" style="color:#333;font-size:0.7rem;text-align:center;padding:16px 0;display:none;">// NO HISTORY DATA YET — DEPLOY AN UPDATE TO BEGIN LOGGING //</div>
+    <canvas id="froconHistoryChart" height="160" style="width:100%;display:block;"></canvas>
+  </div>
+
+  <!-- pips + button inside page-layout so they're full width -->
+  <div class="footer-row">
+    <button class="change-btn" id="adminToggle">[ SYS ]</button>
+  </div>
+
+</div><!-- end page-layout -->
+
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal">
+    <button class="modal-close" id="modalClose">✕</button>
+    <div class="auth-gate" id="authGate">
+      <h2>⚠ Admin Access</h2>
+      <div class="form-group">
+        <label class="form-label">Authorization Code</label>
+        <input class="form-input" type="password" id="pwInput" placeholder="enter password" autocomplete="current-password" />
+        <div class="error-msg" id="authError"></div>
+      </div>
+      <button class="btn-apply" id="authSubmit">AUTHENTICATE</button>
+    </div>
+    <div class="admin-panel" id="adminPanel">
+      <h2>FroCon Control</h2>
+      <div class="form-group">
+        <label class="form-label">Set FroCon Level</label>
+        <div class="level-btns" id="levelBtns">
+          <button class="level-btn" data-level="1">1</button>
+          <button class="level-btn" data-level="2">2</button>
+          <button class="level-btn" data-level="3">3</button>
+          <button class="level-btn" data-level="4">4</button>
+          <button class="level-btn" data-level="5">5</button>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Status Message</label>
+        <textarea class="form-textarea" id="msgInput" rows="2" placeholder="What's the situation?"></textarea>
+      </div>
+      <button class="btn-apply" id="applyBtn">DEPLOY UPDATE</button>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getDatabase, ref, set, push, onValue } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+
+const IMAGES = {
+  1: 'frocon1.png',
+  2: 'frocon2.png',
+  3: 'frocon3.png',
+  4: 'frocon4.png',
+  5: 'frocon5.png'
+};
+
+const firebaseConfig = {
+  apiKey: "AIzaSyD5zbt8ElS8GwAJ-yVFfpBtTLOBO1mvaqM",
+  authDomain: "frocon-dashboard.firebaseapp.com",
+  databaseURL: "https://frocon-dashboard-default-rtdb.firebaseio.com",
+  projectId: "frocon-dashboard",
+  storageBucket: "frocon-dashboard.firebasestorage.app",
+  messagingSenderId: "1016369899999",
+  appId: "1:1016369899999:web:eb908712bd8a69663f7c6a",
+  measurementId: "G-4RR1X5FXSG"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+const stateRef = ref(db, 'frocon/state');
+
+const LEVELS = {
+  5: { label: "FROCON 5", color: "#2196f3", desc: "All is well. Maximum peace.",       defaultMsg: "Maximum peace. The fro has ascended. Inbox zero achieved. Birds are singing." },
+  4: { label: "FROCON 4", color: "#00e676", desc: "Mostly chill. Carrying on.",        defaultMsg: "Mostly chill. Someone made coffee. The sprint board looks like a spa day." },
+  3: { label: "FROCON 3", color: "#f9c700", desc: "Elevated. We're watching.",         defaultMsg: "Things are… fine. Probably. Hair gaining elevation." },
+  2: { label: "FROCON 2", color: "#e65100", desc: "Stress hair activated.",            defaultMsg: "Things are bad but we're pretending they're not. Stress hair activated." },
+  1: { label: "FROCON 1", color: "#c62828", desc: "Everything is on fire.",            defaultMsg: "Everything is on fire. The calendar is a cry for help. Slack is just screaming in text form." },
+};
+
+const PASSWORD_HASH = "35d700e076e90975684b60b6d4e18bc860dc725a6679c074cee53c4f228778a0";
+
+// Pure-JS SHA-256 — works over HTTP and HTTPS
+function sha256(str) {
+  function rightRotate(value, amount) { return (value >>> amount) | (value << (32 - amount)); }
+  const mathPow = Math.pow;
+  const maxWord = mathPow(2, 32);
+  let result = '';
+  const words = [];
+  const asciiBitLength = str.length * 8;
+  let hash = [], k = [];
+  let primeCounter = 0;
+  const isComposite = {};
+  for (let candidate = 2; primeCounter < 64; candidate++) {
+    if (!isComposite[candidate]) {
+      for (let i = candidate * candidate; i < 313; i += candidate) isComposite[i] = true;
+      hash[primeCounter] = (mathPow(candidate, .5) * maxWord) | 0;
+      k[primeCounter++] = (mathPow(candidate, 1/3) * maxWord) | 0;
+    }
+  }
+  str += '\x80';
+  while (str.length % 64 - 56) str += '\x00';
+  for (let i = 0; i < str.length; i++) {
+    const j = str.charCodeAt(i);
+    if (j >> 8) return '';
+    words[i >> 2] |= j << ((3 - i) % 4) * 8;
+  }
+  words[words.length] = ((asciiBitLength / maxWord) | 0);
+  words[words.length] = (asciiBitLength | 0);
+  for (let j = 0; j < words.length;) {
+    const w = words.slice(j, j += 16);
+    const oldHash = hash.slice(0);
+    for (let i = 0; i < 64; i++) {
+      const w15 = w[i - 15], w2 = w[i - 2];
+      const a = hash[0], e = hash[4];
+      const temp1 = hash[7]
+        + (rightRotate(e, 6) ^ rightRotate(e, 11) ^ rightRotate(e, 25))
+        + ((e & hash[5]) ^ (~e & hash[6]))
+        + k[i]
+        + (w[i] = (i < 16) ? w[i] : (
+          w[i - 16]
+          + (rightRotate(w15, 7) ^ rightRotate(w15, 18) ^ (w15 >>> 3))
+          + w[i - 7]
+          + (rightRotate(w2, 17) ^ rightRotate(w2, 19) ^ (w2 >>> 10))
+        ) | 0);
+      const temp2 = (rightRotate(a, 2) ^ rightRotate(a, 13) ^ rightRotate(a, 22))
+        + ((a & hash[1]) ^ (a & hash[2]) ^ (hash[1] & hash[2]));
+      hash = [(temp1 + temp2) | 0].concat(hash);
+      hash[4] = (hash[4] + temp1) | 0;
+      hash.length = 8;
+    }
+    hash = hash.map((h, i) => (h + oldHash[i]) | 0);
+  }
+  hash.forEach(h => {
+    for (let i = 3; i + 1; i--) {
+      const byte = (h >> (i * 8)) & 255;
+      result += ((byte < 16) ? '0' : '') + byte.toString(16);
+    }
+  });
+  return result;
+}
+
+async function hashPassword(input) {
+  return sha256(input);
+}
+
+let authenticated = false;
+let adminSelectedLevel = 3;
+let isFirstLoad = true;
+
+// ── Build legend ─────────────────────────────────────────
+function buildLegend(activeLevel) {
+  const legend = document.getElementById('legend');
+  legend.innerHTML = '';
+  // Render 5 down to 1
+  [5,4,3,2,1].forEach(lvl => {
+    const { label, color, desc } = LEVELS[lvl];
+    const item = document.createElement('div');
+    item.className = 'legend-item' + (lvl === activeLevel ? ' active-level' : '');
+    item.style.setProperty('--item-color', color);
+    item.innerHTML = `
+      <div class="legend-dot"></div>
+      <div class="legend-text">
+        <div class="legend-level">${label}</div>
+        <div class="legend-desc">${desc}</div>
+      </div>`;
+    legend.appendChild(item);
+  });
+}
+
+// ── Render ───────────────────────────────────────────────
+function render(state) {
+  const { level, message, updatedAt } = state;
+  const color = LEVELS[level].color;
+  document.documentElement.style.setProperty('--level-color', color);
+  const pl = document.querySelector('.page-layout');
+  if (pl) { pl.style.borderTopColor = color; pl.style.boxShadow = `0 -6px 18px ${color}`; }
+  document.getElementById('froconTitle').textContent = LEVELS[level].label;
+  document.getElementById('statusMsg').textContent = message;
+
+  const img = document.getElementById('froImg');
+  img.style.opacity = '0';
+  setTimeout(() => { img.src = IMAGES[level]; img.style.opacity = '1'; }, 220);
+
+  const d = new Date(updatedAt);
+  const pad = n => String(n).padStart(2,'0');
+  document.getElementById('tsDate').textContent = `${pad(d.getMonth()+1)}/${pad(d.getDate())}/${d.getFullYear()}`;
+  document.getElementById('tsTime').textContent = `${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
+
+  const pips = document.getElementById('pips');
+  pips.innerHTML = '';
+  for (let i = 1; i <= 5; i++) {
+    const pip = document.createElement('div');
+    pip.className = 'level-pip' + (i <= level ? ' active' : '');
+    pips.appendChild(pip);
+  }
+
+  buildLegend(level);
+
+  if (!isFirstLoad) {
+    const froBox = document.getElementById('froBox');
+    froBox.classList.remove('flash');
+    void froBox.offsetWidth;
+    froBox.classList.add('flash');
+  }
+  isFirstLoad = false;
+}
+
+// ── Firebase ─────────────────────────────────────────────
+onValue(stateRef, (snapshot) => {
+  document.getElementById('liveDot').className = 'live-dot connected';
+  document.getElementById('liveLabel').textContent = 'live';
+  const data = snapshot.val();
+  if (data) {
+    render(data);
+  } else {
+    const defaults = { level: 3, message: LEVELS[3].defaultMsg, updatedAt: Date.now() };
+    set(stateRef, defaults);
+    render(defaults);
+  }
+}, (error) => {
+  document.getElementById('liveDot').className = 'live-dot error';
+  document.getElementById('liveLabel').textContent = 'offline';
+  console.error('Firebase error:', error);
+});
+
+// ── Modal ────────────────────────────────────────────────
+function openModal() {
+  document.getElementById('modalOverlay').classList.add('open');
+  document.getElementById('pwInput').value = '';
+  document.getElementById('authError').textContent = '';
+  if (!authenticated) {
+    document.getElementById('authGate').classList.remove('hidden');
+    document.getElementById('adminPanel').classList.remove('visible');
+    setTimeout(() => document.getElementById('pwInput').focus(), 100);
+  } else {
+    showAdminPanel();
+  }
+}
+function closeModal() { document.getElementById('modalOverlay').classList.remove('open'); }
+function showAdminPanel() {
+  document.getElementById('authGate').classList.add('hidden');
+  document.getElementById('adminPanel').classList.add('visible');
+  document.getElementById('msgInput').value = '';
+  refreshLevelBtns();
+}
+function refreshLevelBtns() {
+  document.querySelectorAll('.level-btn').forEach(btn => {
+    const lvl = parseInt(btn.dataset.level);
+    const color = LEVELS[lvl].color;
+    const isSelected = lvl === adminSelectedLevel;
+    btn.style.background = isSelected ? color : '#1a1a1a';
+    btn.style.borderColor = isSelected ? color : '#333';
+    btn.style.color = isSelected ? '#000' : '#555';
+    btn.style.boxShadow = isSelected ? `0 0 12px ${color}` : 'none';
+  });
+}
+
+document.getElementById('adminToggle').addEventListener('click', openModal);
+document.getElementById('modalClose').addEventListener('click', closeModal);
+document.getElementById('modalOverlay').addEventListener('click', e => {
+  if (e.target === document.getElementById('modalOverlay')) closeModal();
+});
+document.getElementById('authSubmit').addEventListener('click', async () => {
+  const hash = await hashPassword(document.getElementById('pwInput').value);
+  if (hash === PASSWORD_HASH) {
+    authenticated = true;
+    showAdminPanel();
+  } else {
+    document.getElementById('authError').textContent = '// ACCESS DENIED — invalid credentials //';
+    document.getElementById('pwInput').value = '';
+    document.getElementById('pwInput').focus();
+  }
+});
+document.getElementById('pwInput').addEventListener('keydown', e => {
+  if (e.key === 'Enter') document.getElementById('authSubmit').click();
+});
+document.querySelectorAll('.level-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    adminSelectedLevel = parseInt(btn.dataset.level);
+    refreshLevelBtns();
+  });
+});
+document.getElementById('applyBtn').addEventListener('click', () => {
+  const msg = document.getElementById('msgInput').value.trim() || LEVELS[adminSelectedLevel].defaultMsg;
+  const now = Date.now();
+  set(stateRef, { level: adminSelectedLevel, message: msg, updatedAt: now });
+  const historyRef = ref(db, 'frocon/history');
+  push(historyRef, { level: adminSelectedLevel, message: msg, updatedAt: now });
+  closeModal();
+});
+
+// ── History Chart ─────────────────────────────────────────
+const LEVEL_COLORS = {
+  1: '#c62828',
+  2: '#e65100',
+  3: '#f9c700',
+  4: '#00e676',
+  5: '#2196f3'
+};
+
+let historyChart = null;
+
+onValue(ref(db, 'frocon/history'), (snapshot) => {
+  const data = snapshot.val();
+  const entries = data ? Object.values(data).sort((a, b) => a.updatedAt - b.updatedAt) : [];
+
+  const empty = document.getElementById('historyEmpty');
+  const canvas = document.getElementById('froconHistoryChart');
+  if (entries.length === 0) {
+    empty.style.display = 'block';
+    canvas.style.display = 'none';
+    return;
+  }
+  empty.style.display = 'none';
+  canvas.style.display = 'block';
+
+  const labels = entries.map(e => {
+    const d = new Date(e.updatedAt);
+    return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+      + ' ' + d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+  });
+  const levels = entries.map(e => e.level);
+  const pointColors = levels.map(l => LEVEL_COLORS[l]);
+
+  if (historyChart) historyChart.destroy();
+
+  historyChart = new Chart(canvas, {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [{
+        label: 'FROCON LEVEL',
+        data: levels,
+        borderColor: 'rgba(232,224,204,0.4)',
+        backgroundColor: 'rgba(232,224,204,0.03)',
+        pointBackgroundColor: pointColors,
+        pointBorderColor: pointColors,
+        pointRadius: 6,
+        pointHoverRadius: 9,
+        borderWidth: 1.5,
+        tension: 0.3,
+        fill: true
+      }]
+    },
+    options: {
+      responsive: true,
+      scales: {
+        y: {
+          reverse: true,
+          min: 1,
+          max: 5.4,
+          ticks: {
+            stepSize: 1,
+            color: '#555',
+            font: { family: 'Share Tech Mono', size: 10 },
+            callback: val => val <= 5 ? `FC ${val}` : ''
+          },
+          grid: { color: '#1a1a1a' },
+          border: { color: '#2a2a2a' }
+        },
+        x: {
+          ticks: {
+            color: '#444',
+            font: { family: 'Share Tech Mono', size: 9 },
+            maxRotation: 45,
+            maxTicksLimit: 10
+          },
+          grid: { color: '#1a1a1a' },
+          border: { color: '#2a2a2a' }
+        }
+      },
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: '#0f0f0f',
+          borderColor: '#333',
+          borderWidth: 1,
+          titleColor: '#e8e0cc',
+          bodyColor: '#888',
+          titleFont: { family: 'Share Tech Mono', size: 11 },
+          bodyFont: { family: 'Share Tech Mono', size: 10 },
+          callbacks: {
+            title: items => `FROCON ${levels[items[0].dataIndex]}`,
+            label: items => entries[items.dataIndex].message
+          }
+        }
+      }
+    }
+  });
+});
+
+</script>
+</body>
+</html>
