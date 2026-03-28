@@ -404,11 +404,18 @@
 
   </div><!-- end content-row -->
 
-  <!-- ── HISTORY CHART ── -->
-  <div id="history-section" style="width:100%;margin:18px 0 0;padding:0 12px;">
-    <div style="color:var(--muted);letter-spacing:0.15em;font-size:0.6rem;margin-bottom:8px;border-bottom:1px solid var(--border);padding-bottom:6px;">▸ FROCON LEVEL HISTORY</div>
-    <div id="historyEmpty" style="color:#333;font-size:0.7rem;text-align:center;padding:16px 0;display:none;">// NO HISTORY DATA YET — DEPLOY AN UPDATE TO BEGIN LOGGING //</div>
-    <canvas id="froconHistoryChart" height="160" style="width:100%;display:block;"></canvas>
+  <!-- ── HISTORY PANEL ── -->
+  <div id="history-section" style="width:100%;margin:24px 0 0;padding:0 12px;">
+    <div style="border:1px solid var(--border);background:var(--panel);">
+      <div style="padding:8px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px;">
+        <div style="width:6px;height:6px;border-radius:50%;background:var(--level-color);box-shadow:0 0 6px var(--level-color);flex-shrink:0;"></div>
+        <span style="color:var(--muted);letter-spacing:0.3em;font-size:0.55rem;text-transform:uppercase;">Frocon Level History</span>
+      </div>
+      <div style="padding:14px 12px 10px;">
+        <div id="historyEmpty" style="color:#333;font-size:0.7rem;text-align:center;padding:24px 0;display:none;">// NO HISTORY DATA YET — DEPLOY AN UPDATE TO BEGIN LOGGING //</div>
+        <canvas id="froconHistoryChart" height="160" style="width:100%;display:block;"></canvas>
+      </div>
+    </div>
   </div>
 
   <!-- pips + button inside page-layout so they're full width -->
